@@ -94,6 +94,12 @@ void Fisheye::renderPixel(int row, int col)
     float ysphere = -x;
     float zsphere = y;
     
+    /* NOTE: For UV mapping, use the following coordinate:
+    float u = atan2(ysphere, xsphere)/aperture;
+    float v = (asin(zsphere) + M_PI/2)/M_PI;
+    setColor(row, col, image->getColor(u, v));
+    */
+    
     float lambda = atan2f(ysphere, xsphere);
     if (lambda < 0)
         lambda += 2*M_PI;
@@ -103,27 +109,15 @@ void Fisheye::renderPixel(int row, int col)
     int px = int(image->R * lambda);
     int py = int(image->R * log(tan(M_PI_4 + fi/2)));
 
-    
-//    cout << "xsphere: " << xsphere << endl;
-//    cout << "ysphere: " << ysphere << endl;
-//    cout << "zsphere: " << zsphere << endl;
-//    
-//    cout << "R: " << image->R << endl;
-//    cout << "lambda: " << lambda << endl;
-//    cout << "fi: " << fi << endl;
-//    cout << "px: " << px << endl;
-//    cout << "py: " << py << endl;
-    
     if (py > image->yDim/2 || py <= -image->yDim/2) {
         setColor(row, col, grey_pixel);
         return;
     }
 
-//    image->getColor(px, py).print();
     
     setColor(row, col, image->getColor(px, py));
     
-//    exit(1);
+
 }
 
 
@@ -132,9 +126,19 @@ Pixel Image::getColor(int x, int y)
     int r = yDim/2 - y;
     int c = x + xDim/2;
     assert(0 <= r*xDim+c <= xDim*yDim-1);
-//    cout << "r: " << r << endl;
-//    cout << "c: " << c << endl;
     return pixels[r*xDim+c];
+    /* Note: for UV mapping, the the following code: 
+    Pixel Image::getColor(float u, float v)
+{
+    int x = u*xDim;
+    int y = v*yDim;
+    int r = yDim - y;
+    int c = xDim - x;
+    assert(0 <= r*xDim+c <= xDim*yDim-1);
+    return pixels[r*xDim+c];
+}
+
+    */
 }
 
 
