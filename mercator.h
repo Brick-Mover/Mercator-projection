@@ -17,8 +17,6 @@
 using namespace std;
 
 const float TOLERANCE = float(1.0e-04);
-enum WALLTYPE {yPos, yNeg, xNeg, xPos, zPos, zNeg};
-
 
 
 struct Point
