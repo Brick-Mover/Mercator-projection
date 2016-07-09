@@ -33,7 +33,7 @@ int main(int argc, const char * argv[])
     Image* s = new Image(2058, 1746);
     initializeWalls(s);
     
-    Fisheye* f = new Fisheye(M_PI,0,origin,s,600,600);
+    Fisheye* f = new Fisheye(M_PI ,0,origin,s,600,600);
     f->render();
     vector<Pixel> result = f->getImage();
     saveImg(result, 600, 600);
@@ -98,7 +98,7 @@ void Fisheye::renderPixel(int row, int col)
     if (lambda < 0)
         lambda += 2*M_PI;
     lambda = -lambda;
-    float fi = atan2f(zsphere, xsphere);
+    float fi = -acos(zsphere) + M_PI_2;
     
     int px = int(image->R * lambda);
     int py = int(image->R * log(tan(M_PI_4 + fi/2)));
@@ -114,7 +114,7 @@ void Fisheye::renderPixel(int row, int col)
 //    cout << "px: " << px << endl;
 //    cout << "py: " << py << endl;
     
-    if (py > image->yDim/2 || py < -image->yDim/2) {
+    if (py > image->yDim/2 || py <= -image->yDim/2) {
         setColor(row, col, grey_pixel);
         return;
     }
