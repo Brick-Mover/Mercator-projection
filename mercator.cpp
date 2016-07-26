@@ -90,8 +90,8 @@ void Fisheye::renderPixel(int row, int col)
     float y = sinf(theta) * sinf(phi);
     float z = cosf(phi);
     
-    float xsphere = z;
-    float ysphere = -x;
+    float xsphere = -x;
+    float ysphere = z;
     float zsphere = y;
     
     /* NOTE: For UV mapping, use the following coordinate:
